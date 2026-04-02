@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="pt-br" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Econômico Brasil</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- HEADER -->
+    <header class="header">
+        <div class="header-content">
+            <div class="header-left">
+                <span class="logo-icon">📊</span>
+                <div>
+                    <h1>Painel Econômico</h1>
+                    <p class="subtitulo">Indicadores do Brasil em tempo real</p>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="ultima-atualizacao">
+                    <span class="dot-live"></span>
+                    <span id="ultima-atualizacao">Atualizando...</span>
+                </div>
+                <button class="btn-atualizar" onclick="atualizarTudo()" title="Atualizar dados">
+                    <span id="icone-refresh">🔄</span>
+                </button>
+                <button class="btn-tema" onclick="alternarTema()" title="Alternar tema">
+                    <span id="icone-tema">🌙</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+
+        <!-- CARDS PRINCIPAIS -->
+        <section class="section-cards">
+            <div class="cards">
+                <div class="card" id="card-selic">
+                    <div class="card-header">
+                        <span class="icone">📈</span>
+                        <span class="badge badge-neutro">A.A.</span>
+                    </div>
+                    <h3>Taxa Selic</h3>
+                    <p class="valor" id="selic">
+                        <span class="skeleton"></span>
+                    </p>
+                    <span class="label">ao ano · Banco Central</span>
+                </div>
+
+                <div class="card" id="card-dolar">
+                    <div class="card-header">
+                        <span class="icone">💵</span>
+                        <span class="badge badge-variacao" id="badge-dolar">--</span>
+                    </div>
+                    <h3>Dólar</h3>
+                    <p class="valor" id="dolar">
+                        <span class="skeleton"></span>
+                    </p>
+                    <span class="label" id="label-dolar">BRL · compra/venda</span>
+                </div>
+
+                <div class="card" id="card-euro">
+                    <div class="card-header">
+                        <span class="icone">💶</span>
+                        <span class="badge badge-variacao" id="badge-euro">--</span>
+                    </div>
+                    <h3>Euro</h3>
+                    <p class="valor" id="euro">
+                        <span class="skeleton"></span>
+                    </p>
+                    <span class="label" id="label-euro">BRL · compra/venda</span>
+                </div>
+
+                <div class="card" id="card-ipca">
+                    <div class="card-header">
+                        <span class="icone">📊</span>
+                        <span class="badge badge-neutro">IBGE</span>
+                    </div>
+                    <h3>IPCA</h3>
+                    <p class="valor" id="ipca">
+                        <span class="skeleton"></span>
+                    </p>
+                    <span class="label">último mês disponível</span>
+                </div>
+
+                <div class="card" id="card-cdi">
+                    <div class="card-header">
+                        <span class="icone">🏦</span>
+                        <span class="badge badge-neutro">A.A.</span>
+                    </div>
+                    <h3>CDI</h3>
+                    <p class="valor" id="cdi">
+                        <span class="skeleton"></span>
+                    </p>
+                    <span class="label">ao ano · Banco Central</span>
+                </div>
+
+                <div class="card" id="card-bitcoin">
+                    <div class="card-header">
+                        <span class="icone">₿</span>
+                        <span class="badge badge-variacao" id="badge-bitcoin">--</span>
+                    </div>
+                    <h3>Bitcoin</h3>
+                    <p class="valor" id="bitcoin">
+                        <span class="skeleton"></span>
+                    </p>
+                    <span class="label">BRL · cotação atual</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- GRÁFICOS -->
+        <section class="graficos-grid">
+            <div class="grafico-container grafico-grande">
+                <div class="grafico-header">
+                    <div>
+                        <h2>Dólar — Últimos 30 dias</h2>
+                        <p class="grafico-subtitulo" id="info-dolar">Cotação diária (R$)</p>
+                    </div>
+                    <div class="grafico-badge">USD/BRL</div>
+                </div>
+                <canvas id="graficoDolar"></canvas>
+            </div>
+
+            <div class="grafico-container grafico-grande">
+                <div class="grafico-header">
+                    <div>
+                        <h2>Euro — Últimos 30 dias</h2>
+                        <p class="grafico-subtitulo" id="info-euro">Cotação diária (R$)</p>
+                    </div>
+                    <div class="grafico-badge" style="background: rgba(74,144,217,0.12); color: #4a90d9;">EUR/BRL</div>
+                </div>
+                <canvas id="graficoEuro"></canvas>
+            </div>
+
+            <div class="grafico-container grafico-grande">
+                <div class="grafico-header">
+                    <div>
+                        <h2>IPCA — Últimos 12 meses</h2>
+                        <p class="grafico-subtitulo">Inflação mensal (%)</p>
+                    </div>
+                    <div class="grafico-badge" style="background: rgba(255,140,0,0.12); color: #ff8c00;">IBGE</div>
+                </div>
+                <canvas id="graficoIPCA"></canvas>
+            </div>
+        </section>
+
+        <!-- TABELA DE COMPARAÇÃO -->
+        <section class="tabela-section">
+            <h2 class="section-title">📋 Comparativo de Moedas</h2>
+            <div class="tabela-wrapper">
+                <table class="tabela">
+                    <thead>
+                        <tr>
+                            <th>Moeda</th>
+                            <th>Compra</th>
+                            <th>Venda</th>
+                            <th>Variação</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabela-moedas">
+                        <tr>
+                            <td colspan="5" class="tabela-loading">Carregando dados...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <footer class="fonte">
+            <span>Fonte: Banco Central do Brasil · AwesomeAPI · IBGE</span>
+            <span>Dados com fins informativos</span>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
